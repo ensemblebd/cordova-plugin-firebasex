@@ -26,6 +26,7 @@ Utilities.setContext = function(context){
 };
 
 Utilities.parsePackageJson = function(){
+    if (!fs.existsSync("package.json")) return null;
     return JSON.parse(fs.readFileSync(path.resolve('./package.json')));
 };
 
@@ -102,7 +103,7 @@ Utilities.parsePluginVariables = function(){
 
     // Parse package.json
     var packageJSON = Utilities.parsePackageJson();
-    if(packageJSON.cordova && packageJSON.cordova.plugins){
+    if(packageJSON && packageJSON.cordova && packageJSON.cordova.plugins){
         for(const pluginId in packageJSON.cordova.plugins){
             if(pluginId === Utilities.getPluginId()){
                 for(const varName in packageJSON.cordova.plugins[pluginId]){

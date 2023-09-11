@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-firebasex",
-  "version": "16.1.0",
+  "version": "16.1.1",
   "description": "Cordova plugin for Google Firebase",
   "types": "./types/index.d.ts",
   "author": {
@@ -9,10 +9,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dpa99c/cordova-plugin-firebase"
+    "url": "https://github.com/ensemblebd/cordova-plugin-firebasex"
   },
   "cordova": {
-    "id": "cordova-plugin-firebase",
+    "id": "cordova-plugin-firebasex",
     "platforms": [
       "android",
       "ios"
