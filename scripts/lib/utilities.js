@@ -26,23 +26,15 @@ Utilities.setContext = function(context){
 };
 
 Utilities.parsePackageJson = function(){
-    if (fs.existsSync("package.json")) JSON.parse(fs.readFileSync(path.resolve('./package.json')));
-    else if (fs.existsSync("plugins/fetch.json")) {
-        // meteor uses fetch.json to provision the preferences..
-        var meteorConfig = JSON.parse(fs.readFileSync(path.resolve('./plugins/fetch.json')));
-        var id = Utilities.getPluginId();
-        if (meteorConfig && meteorConfig[id]) {
-            meteorConfig = meteorConfig[id];
-            var preferences = meteorConfig.variables;
-            if (preferences && Object.keys(preferences).length>0) {
-                // now we reconstruct it to feed the original plugin code which thinks this is a package.json file...
-                var structure =  {cordova: {plugins: {}}};
-                structure.cordova.plugins[id] = preferences;
-                return structure;
-            }
-        }
+    try {
+        return JSON.parse(fs.readFileSync(path.resolve('./package.json')));
     }
-    return null;
+    catch (error) {
+        if(error.code === "ENOENT") {
+            return {}
+        }
+        throw error;
+    }
 };
 
 Utilities.parseConfigXml = function(){
@@ -118,7 +110,7 @@ Utilities.parsePluginVariables = function(){
 
     // Parse package.json
     var packageJSON = Utilities.parsePackageJson();
-    if(packageJSON && packageJSON.cordova && packageJSON.cordova.plugins){
+    if(packageJSON.cordova && packageJSON.cordova.plugins){
         for(const pluginId in packageJSON.cordova.plugins){
             if(pluginId === Utilities.getPluginId()){
                 for(const varName in packageJSON.cordova.plugins[pluginId]){
