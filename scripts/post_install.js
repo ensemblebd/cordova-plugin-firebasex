@@ -237,6 +237,7 @@ const main = function() {
 
         modulesPath = path.resolve(pluginNodePath, "..");
         projectPath = path.resolve(modulesPath, "..");
+        console.log(`Running post-install script for ${PLUGIN_ID} in project path: ${projectPath}`);
 
         try{
             parser = require("xml-js");
