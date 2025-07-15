@@ -3801,39 +3801,34 @@ public class FirebasePlugin extends CordovaPlugin {
     }
 
     private void executeGlobalJavascript(final String jsString) {
-        if (cordovaActivity == null) return;
-        if (!pluginInitialized) {
-            if (pendingGlobalJS == null) {
-                pendingGlobalJS = new ArrayList<String>();
+        if(pluginInitialized){
+            doExecuteGlobalJavascript(jsString);
+        } else {
+            if(pendingGlobalJS == null) {
+                pendingGlobalJS = new ArrayList<>();
             }
             pendingGlobalJS.add(jsString);
-            return;
         }
-        doExecuteGlobalJavascript(jsString);
     }
 
     private void executePendingGlobalJavascript() {
-        if (pendingGlobalJS == null || pendingGlobalJS.isEmpty()) return;
-
-        for (String jsString : pendingGlobalJS) {
+        if(pendingGlobalJS == null){
+            Log.d(TAG, "No pending global JS calls");
+            return;
+        }
+        Log.d(TAG, "Executing "+pendingGlobalJS.size()+" pending global JS calls");
+        for(String jsString : pendingGlobalJS){
             doExecuteGlobalJavascript(jsString);
         }
-        pendingGlobalJS.clear();
+        pendingGlobalJS = null;
     }
 
     private void doExecuteGlobalJavascript(final String jsString) {
+        if (cordovaActivity == null) return;
         cordovaActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                webView.loadUrl("javascript:(function(){" +
-                    "if(!window.FirebasePlugin || !window.FirebasePlugin.pageLoaded){" +
-                    "  setTimeout(function(){" +
-                    "    cordova.require('cordova-plugin-firebasex.FirebasePlugin').executeJavascript(" + jsString + ");" +
-                    "  }, 100);" +
-                    "  return;" +
-                    "}" +
-                    jsString +
-                    "})();");
+                webView.loadUrl("javascript:" + jsString);
             }
         });
     }
