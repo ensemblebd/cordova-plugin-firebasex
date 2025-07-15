@@ -33,6 +33,14 @@ var onAuthIdTokenChangeCallback = function(){};
 var onInstallationIdChangeCallback = function(){};
 var onApplicationDidBecomeActiveCallback = function(){};
 var onApplicationDidEnterBackgroundCallback = function(){};
+var pageLoaded = false;
+
+document.addEventListener('deviceready', function() {
+    pageLoaded = true;
+}, false);
+
+// Expose pageLoaded to window object
+exports.pageLoaded = pageLoaded;
 
 /***********************
  * Protected internals
@@ -56,6 +64,14 @@ exports._applicationDidBecomeActive = function(){
 
 exports._applicationDidEnterBackground = function(){
     onApplicationDidEnterBackgroundCallback();
+};
+
+exports.executeJavascript = function(jsString) {
+    if (typeof jsString === 'string') {
+        eval(jsString);
+    } else {
+        console.error('FirebasePlugin.executeJavascript: jsString must be a string');
+    }
 };
 
 /**************
