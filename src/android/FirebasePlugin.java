@@ -278,7 +278,6 @@ public class FirebasePlugin extends CordovaPlugin {
                     createDefaultChannel();
 
                     pluginInitialized = true;
-                    executePendingGlobalJavascript();
 
                 } catch (Exception e) {
                     handleExceptionWithoutContext(e);
@@ -4277,5 +4276,14 @@ public class FirebasePlugin extends CordovaPlugin {
             callbackContext.error("No user is currently signed");
         }
         return signedIn;
+    }
+
+    @Override
+    public Object onMessage(String id, Object data) {
+        if ("onPageFinished".equals(id)) {
+            Log.d(TAG, "Page ready init javascript");
+            executePendingGlobalJavascript();
+        }
+        return null;
     }
 }
